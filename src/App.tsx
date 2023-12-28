@@ -1,35 +1,43 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import "./App.css";
+import { Match } from "./types/match";
+import useStore from "./state/appstore";
+import TimerButton from "./components/TimerButton";
+import { v4 } from "uuid";
+import { Round } from "./types/round";
+import { useState } from "react";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const { setMatch, isMatchRunning } = useStore();
+  const [isMatchStarted, setMatchStarted] = useState(false);
+
+  function startMatch() {
+    const mockMatch: Match = {
+      players: [
+        { id: v4(), name: "Black", score: 0 },
+        { id: v4(), name: "White", score: 0 },
+      ],
+      isRunning: true,
+      rounds: [{} as Round],
+      matchTimer: 100,
+    };
+
+    setMatch(mockMatch);
+    setMatchStarted(isMatchRunning());
+  }
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+      <div className="App">
+        <header className="App-header">
+          <p>Chess timer</p>
+        </header>
+        <button hidden={isMatchStarted} onClick={startMatch}>
+          Start match
         </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+        <TimerButton isMatchStarted={isMatchStarted} />
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
