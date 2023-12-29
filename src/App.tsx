@@ -3,26 +3,26 @@ import { Match } from "./types/match";
 import useStore from "./state/appstore";
 import TimerButton from "./components/TimerButton";
 import { v4 } from "uuid";
-import { Round } from "./types/round";
 import { useState } from "react";
+import { PlayerType } from "./types/playertype";
 
 function App() {
-  const { setMatch, isMatchRunning } = useStore();
+  const { setMatch } = useStore();
   const [isMatchStarted, setMatchStarted] = useState(false);
 
   function startMatch() {
     const mockMatch: Match = {
-      players: [
-        { id: v4(), name: "Black", score: 0 },
-        { id: v4(), name: "White", score: 0 },
-      ],
+      uuid: v4(),
       isRunning: true,
-      rounds: [{} as Round],
-      matchTimer: 100,
+      player: {
+        id: v4(),
+        type: PlayerType.WHITE,
+      },
+      timeLimit: 100,
     };
 
     setMatch(mockMatch);
-    setMatchStarted(isMatchRunning());
+    setMatchStarted(true);
   }
 
   return (

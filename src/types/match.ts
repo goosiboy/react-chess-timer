@@ -3,10 +3,10 @@ import { MatchPreferences } from "./matchpreferences";
 import { Round } from "./round";
 
 export interface Match {
-  uuid?: string;
+  uuid: string;
   isRunning: boolean;
-  players: Player[];
-  rounds: Round[];
-  matchTimer: number;
+  player: Player;
+  timeLimit: number;
+  rounds?: Round[];
   matchPreferences?: MatchPreferences;
 }

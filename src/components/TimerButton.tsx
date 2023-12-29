@@ -1,51 +1,31 @@
 import { useState } from "react";
 import { Timer } from "../timer";
+import useStore from "../state/appstore";
 
 function TimerButton({ isMatchStarted }: { isMatchStarted: boolean }) {
-  // const { getMatchTime } = useStore();
-  // const [timer] = useState<Timer>(new Timer(getMatchTime()));
-  const [currentTime] = useState(100);
+  const { getMatchTime } = useStore();
   const [isRunning, setIsRunning] = useState(false);
-  // const [timerInterval, setTimerInterval] = useState(0);
+  const [countdownTimerIntervalId, setCountdownTimerIntervalId] = useState(0);
 
-  const timer = new Timer(100);
-
-  /*
-  useEffect(() => {
-    setCurrentTime(timer.getCurrentTime());
-    console.log("currentTime: " + currentTime);
-    console.log("timer.getCurrentTime(): " + timer.getCurrentTime());
-  }, [currentTime, timer]);
-  */
+  const timer = new Timer();
 
   function timerOnOff() {
-    /*
     if (!isRunning) {
-      console.log("isRunning: " + isRunning);
+      console.log("ON");
       setIsRunning(true);
-      setTimerInterval(
-        setInterval(() => {
-          let newTime = currentTime;
-          setCurrentTime(newTime--);
-        }, 1000)
-      );
+      setCountdownTimerIntervalId(timer.start(getMatchTime()));
+      console.log("getMatchTime1: ", getMatchTime());
     } else {
-      console.log("isRunning: " + isRunning);
+      console.log("OFF");
       setIsRunning(false);
-      clearInterval(timerInterval);
-    }
-    */
-    if (!isRunning) {
-      setIsRunning(true);
-      timer.countDown(10).finally(() => {
-        setIsRunning(false);
-      });
+      timer.stop(countdownTimerIntervalId);
+      console.log("getMatchTime2: ", getMatchTime());
     }
   }
 
   return (
     <div hidden={!isMatchStarted}>
-      <button onClick={timerOnOff}>{currentTime}</button>
+      <button onClick={timerOnOff}>{getMatchTime()}</button>
     </div>
   );
 }

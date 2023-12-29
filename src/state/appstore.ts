@@ -2,17 +2,12 @@ import { create } from "zustand";
 import { Match } from "../types/match";
 import { v4 } from "uuid";
 import { devtools } from "zustand/middleware";
-import { Player } from "../types/player";
-import { Round } from "../types/round";
 
 interface AppStore {
   match: Match;
   matchTime: number;
   setMatch: (match: Match) => void;
   getMatch: () => Match;
-  isMatchRunning: () => boolean;
-  getPlayers: () => Player[];
-  getLatestRound: () => Round;
   setMatchTime: (time: number) => void;
   getMatchTime: () => number;
   resetMatchTime: () => void;
@@ -26,28 +21,11 @@ const useStore = create<AppStore>()(
       match.uuid = v4();
       set(() => ({
         match: match,
+        matchTime: match.timeLimit,
       }));
     },
     getMatch() {
       return get().match;
-    },
-    isMatchRunning() {
-      if (get().match === undefined) {
-        return false;
-      }
-      return get().match.isRunning;
-    },
-    getPlayers() {
-      if (get().match === undefined || get().match.players === undefined) {
-        return [];
-      }
-      return get().match.players;
-    },
-    getLatestRound() {
-      if (get().match === undefined || get().match.rounds === undefined) {
-        return {} as Round;
-      }
-      return get().match.rounds[get().match.rounds.length - 1];
     },
     setMatchTime(time: number) {
       set(() => ({
@@ -55,13 +33,13 @@ const useStore = create<AppStore>()(
       }));
     },
     getMatchTime() {
-      if (get().match === undefined || get().match.matchTimer === undefined) {
+      if (get().match === undefined || get().matchTime === undefined) {
         return 0;
       }
-      return get().match.matchTimer;
+      return get().matchTime;
     },
     resetMatchTime() {
-      get().match.matchTimer = 0;
+      get().matchTime = 0;
       set(() => ({
         match: get().match,
       }));
